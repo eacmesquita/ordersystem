@@ -43,6 +43,29 @@ public void testPlacingInvalidOrder() throws Exception {
         .andExpect(status().isBadRequest());
 }
 
+public void testOrderIdIsReturned() throws Exception {
+    String jsonRequest = "{\"items\":[{\"itemName\":\"apple\",\"quantity\":4},{\"itemName\":\"orange\",\"quantity\":5}]}";
+    mockMvc.perform(post("/order")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonRequest))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.orderId").exists());
+}
+
+public void testAllOrdersEndpoint() throws Exception {
+    mockMvc.perform(get("/order")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+}
+
+public void testOrderByIdEndpoint() throws Exception {
+    String jsonRequest = "{\"items\":[{\"itemName\":\"apple\",\"quantity\":4},{\"itemName\":\"orange\",\"quantity\":5}]}";
+    mockMvc.perform(get("/order/0")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonRequest))
+        .andExpect(status().isOk());
+}
+
 public void  testCalculatePriceWithOffers() {
 	OrderItem oiFive = new OrderItem("orange", 5);
 	OrderService os = new OrderService();
@@ -57,6 +80,5 @@ public void testSaveRepository() {
     repository.saveOrder(order);
     assertNotNull(repository.getOrderById(0));
     assertNotNull(repository.getAllOrders());
-
 }
 }
