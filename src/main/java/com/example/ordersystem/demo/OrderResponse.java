@@ -1,12 +1,15 @@
 package com.example.ordersystem.demo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 public class OrderResponse {
     @JsonIgnore
     boolean success;
     String orderSummary;
-    Float totalOrderCost = null;
+    Float totalOrderCost;
+    Integer orderId;
 
     public boolean getSuccess() {
         return this.success;
@@ -30,6 +33,14 @@ public class OrderResponse {
 
     public void setTotalOrderCost(Float totalOrderCost) {
         this.totalOrderCost = totalOrderCost;
+    }
+
+    public Integer getOrderId() {
+        return this.orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public void createOrderSummary(Order order) {

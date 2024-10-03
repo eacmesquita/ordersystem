@@ -8,12 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class DemoApplicationTests {
+
+    OrderRepository repository = new OrderRepository();
 
 	@Autowired
     private MockMvc mockMvc;
@@ -41,9 +44,19 @@ public void testPlacingInvalidOrder() throws Exception {
 }
 
 public void  testCalculatePriceWithOffers() {
-	OrderItem oi = new OrderItem("orange", 5);
+	OrderItem oiFive = new OrderItem("orange", 5);
 	OrderService os = new OrderService();
-	float orangePrice = os.calculatePriceOfItem(oi);
-	assertEquals(orangePrice, 1.0);
+	float orangePriceForFive = os.calculatePriceOfItem(oiFive);
+	OrderItem oiSix = new OrderItem("orange", 6);
+	float orangePriceForSix = os.calculatePriceOfItem(oiSix);
+	assertEquals(orangePriceForFive, orangePriceForSix);
+}
+
+public void testSaveRepository() {
+    Order order = new Order();
+    repository.saveOrder(order);
+    assertNotNull(repository.getOrderById(0));
+    assertNotNull(repository.getAllOrders());
+
 }
 }

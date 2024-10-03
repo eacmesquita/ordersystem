@@ -11,6 +11,8 @@ public class OrderService {
         put("orange", 0.25f);
     }};
 
+    OrderRepository orderRepository = new OrderRepository();
+
     public OrderResponse processOrder (Order submittedOrder) {
         OrderResponse response = new OrderResponse();
         float totalCost = 0.0f;
@@ -23,6 +25,8 @@ public class OrderService {
             }
             totalCost += itemPrice;
         }
+        int orderId = orderRepository.saveOrder(submittedOrder);
+        response.setOrderId(orderId);
         response.setTotalOrderCost(totalCost);
         response.createOrderSummary(submittedOrder);
         response.setSuccess(true);
@@ -58,5 +62,13 @@ public class OrderService {
                 break;
         }
         return priceWithOffers;
+    }
+
+    public Map<Integer,Order> getAllOrders() {
+        return orderRepository.getAllOrders();
+    }
+
+    public Order getOrderById (int id) {
+        return orderRepository.getOrderById(id);
     }
 }
