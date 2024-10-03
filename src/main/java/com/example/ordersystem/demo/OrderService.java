@@ -32,12 +32,31 @@ public class OrderService {
     /*
      * returns -1 if an invalid item is passed
      */
-    public Float calculatePriceOfItem(OrderItem item) {
+    public float calculatePriceOfItem(OrderItem item) {
         if (!itemToPriceMapping.containsKey(item.getItemName()) || item.getQuantity() < 1) {
             return -1.0F;
         }
         float itemPrice = itemToPriceMapping.get(item.getItemName());
-        //to be updated with offers later
-        return item.getQuantity() * itemPrice;
+        item.setPrice(itemPrice);
+        return calculatePriceOfItemWithOffers(item);
+    }
+
+    public float calculatePriceOfItemWithOffers(OrderItem item) {
+        float priceWithOffers = 0.0f;
+        switch(item.getItemName()) {
+            //for apples it is buy 1 get 1 so price is for (half the number of applies + any odd numbered apple)
+            case "apple":
+                priceWithOffers = (item.getQuantity()/2 + item.getQuantity()%2) * item.getPrice();
+                break;
+            case "orange":
+            //oranges are three for the price of 2 - another term is needed for the modulus of 3
+                priceWithOffers = ((item.getQuantity()/3) * 2 * item.getPrice()) + (item.getQuantity()%3) * item.getPrice();
+                break;
+            default: 
+            //no offers for this item
+                priceWithOffers = item.getQuantity() * item.getPrice();
+                break;
+        }
+        return priceWithOffers;
     }
 }

@@ -13,7 +13,7 @@ public class OrderController {
     OrderService orderService = new OrderService();
 
     @RequestMapping(method=RequestMethod.POST)
-    public ResponseEntity<OrderResponse> placeOrder(@RequestBody Order order) throws InvalidItemException {
+    public ResponseEntity<OrderResponse> placeOrder(@RequestBody Order order) {
             OrderResponse response = orderService.processOrder(order);
             if (!response.getSuccess()) {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); 

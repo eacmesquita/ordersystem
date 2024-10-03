@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,7 +29,7 @@ public void testPlacingOrder() throws Exception {
         .contentType(MediaType.APPLICATION_JSON)
         .content(jsonRequest))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.totalOrderCost").value(3.65));
+        .andExpect(jsonPath("$.totalOrderCost").value(2.2));
 }
 
 public void testPlacingInvalidOrder() throws Exception {
@@ -39,5 +40,10 @@ public void testPlacingInvalidOrder() throws Exception {
         .andExpect(status().isBadRequest());
 }
 
-
+public void  testCalculatePriceWithOffers() {
+	OrderItem oi = new OrderItem("orange", 5);
+	OrderService os = new OrderService();
+	float orangePrice = os.calculatePriceOfItem(oi);
+	assertEquals(orangePrice, 1.0);
+}
 }
